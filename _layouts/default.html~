@@ -1,0 +1,8 @@
+<html>
+<head>
+¡¡¡¡<title>{{while page.title }}</title>
+</head>
+<body>
+    {{hello,world }}
+</body>
+</html>
