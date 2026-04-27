@@ -5,45 +5,174 @@
     <title>兑换码验证</title>
     <style>
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial;}
-        body {display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 50px;}
-        input {padding: 10px; width: 300px; font-size: 16px;}
-        button {padding: 10px 20px; background: #0070f3; color: white; border: none; border-radius: 5px; cursor: pointer;}
-        #result {font-size: 18px; font-weight: bold;}
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+        .page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            text-align: center;
+        }
+        .page-1 {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .page-2 {
+            grid-column: 2;
+            grid-row: 1;
+            display: none;
+        }
+        .page-3 {
+            grid-column: 2;
+            grid-row: 2;
+            display: none;
+        }
+        .logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 48px;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        input {
+            padding: 15px;
+            width: 300px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 12px 30px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #333;
+        }
+        .product-status {
+            font-size: 20px;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <h1>输入兑换码</h1>
-    <input type="text" id="code" placeholder="请输入兑换码" autocomplete="off">
-    <button onclick="checkCode()">验证兑换码</button>
-    <p id="result"></p>
+    <div class="container">
+        <!-- 左上页面 - 入口页面 -->
+        <div class="page page-1">
+            <div class="logo">Forget Raven</div>
+            <h2>Authentication</h2>
+            <input type="text" id="code" placeholder="请输入兑换码" autocomplete="off">
+            <button onclick="checkCode()">CHECK</button>
+            <div class="footer">
+                <div>FORGETRAVEN®</div>
+                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+            </div>
+        </div>
+
+        <!-- 右上页面 - 兑换码正确 -->
+        <div class="page page-2">
+            <div class="logo">Forget Raven</div>
+            <div class="product-status">This product is genuine!</div>
+            <button onclick="backToHome()">RETURN</button>
+            <div class="footer">
+                <div>FORGETRAVEN®</div>
+                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+            </div>
+        </div>
+
+        <!-- 右下页面 - 兑换码错误 -->
+        <div class="page page-3">
+            <div class="logo">Forget Raven</div>
+            <div class="product-status">This product is pirated!</div>
+            <button onclick="backToHome()">RETURN</button>
+            <div class="footer">
+                <div>FORGETRAVEN®</div>
+                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+            </div>
+        </div>
+    </div>
 
     <script>
         async function checkCode() {
             const code = document.getElementById('code').value.trim();
-            const resultEl = document.getElementById('result');
             
             if (!code) {
-                resultEl.textContent = "请输入兑换码！";
-                resultEl.style.color = "red";
+                alert("请输入兑换码！");
                 return;
             }
 
-            // 仅发送用户输入的码到后端，不泄露任何真实码
-            const res = await fetch('/api/verify', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ code })
-            });
+            try {
+                const res = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ code })
+                });
 
-            const data = await res.json();
-            if (data.valid) {
-                resultEl.textContent = "✅ 兑换码正确！";
-                resultEl.style.color = "green";
-            } else {
-                resultEl.textContent = "❌ 兑换码错误！";
-                resultEl.style.color = "red";
+                const data = await res.json();
+                if (data.valid) {
+                    // 显示右上页面
+                    document.querySelector('.page-1').style.display = 'none';
+                    document.querySelector('.page-2').style.display = 'flex';
+                    document.querySelector('.page-3').style.display = 'none';
+                } else {
+                    // 显示右下页面
+                    document.querySelector('.page-1').style.display = 'none';
+                    document.querySelector('.page-2').style.display = 'none';
+                    document.querySelector('.page-3').style.display = 'flex';
+                }
+            } catch (error) {
+                // 显示右下页面
+                document.querySelector('.page-1').style.display = 'none';
+                document.querySelector('.page-2').style.display = 'none';
+                document.querySelector('.page-3').style.display = 'flex';
             }
         }
+
+        function backToHome() {
+            // 返回主页
+            document.querySelector('.page-1').style.display = 'flex';
+            document.querySelector('.page-2').style.display = 'none';
+            document.querySelector('.page-3').style.display = 'none';
+            document.getElementById('code').value = '';
+        }
+
+        // 监听回车键
+        document.getElementById('code').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCode();
+            }
+        });
     </script>
 </body>
 </html>
