@@ -30,11 +30,11 @@
             display: block;
         }
         .logo {
-            font-family: 'Times New Roman', serif;
-            font-size: 48px;
-            font-style: italic;
             margin-bottom: 30px;
-            color: #333;
+        }
+        .logo img {
+            max-width: 200px;
+            height: auto;
         }
         h2 {
             margin-bottom: 25px;
@@ -124,35 +124,35 @@
     <div class="container">
         <!-- 入口页面 -->
         <div class="page page-1 active">
-            <div class="logo">Forget Raven</div>
+            <div class="logo"><img src="logo.png" alt="Forget Raven"></div>
             <h2>Authentication</h2>
             <input type="text" id="code" placeholder="请输入兑换码" autocomplete="off">
             <button onclick="checkCode()">CHECK</button>
             <div class="footer">
                 <div>FORGETRAVEN®</div>
-                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+                <div><a href="https://forgetraven.store/" target="_blank">https://forgetraven.store/</a></div>
             </div>
         </div>
 
         <!-- 兑换码正确页面 -->
         <div class="page page-2">
-            <div class="logo">Forget Raven</div>
+            <div class="logo"><img src="logo.png" alt="Forget Raven"></div>
             <div class="product-status">This product is genuine!</div>
             <button onclick="backToHome()">RETURN</button>
             <div class="footer">
                 <div>FORGETRAVEN®</div>
-                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+                <div><a href="https://forgetraven.store/" target="_blank">https://forgetraven.store/</a></div>
             </div>
         </div>
 
         <!-- 兑换码错误页面 -->
         <div class="page page-3">
-            <div class="logo">Forget Raven</div>
+            <div class="logo"><img src="logo.png" alt="Forget Raven"></div>
             <div class="product-status">This product is pirated!</div>
             <button onclick="backToHome()">RETURN</button>
             <div class="footer">
                 <div>FORGETRAVEN®</div>
-                <div><a href="https://forgetraven.storenvy.com/" target="_blank">https://forgetraven.storenvy.com/</a></div>
+                <div><a href="https://forgetraven.store/" target="_blank">https://forgetraven.store/</a></div>
             </div>
         </div>
     </div>
