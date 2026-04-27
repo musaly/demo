@@ -2,61 +2,59 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>兑换码验证</title>
     <style>
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial;}
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f8f8;
+            padding: 20px;
         }
         .container {
             width: 100%;
-            height: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-        }
-        .page {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 50px;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
             text-align: center;
         }
-        .page-1 {
-            grid-column: 1;
-            grid-row: 1;
-        }
-        .page-2 {
-            grid-column: 2;
-            grid-row: 1;
+        .page {
             display: none;
         }
-        .page-3 {
-            grid-column: 2;
-            grid-row: 2;
-            display: none;
+        .page.active {
+            display: block;
         }
         .logo {
             font-family: 'Times New Roman', serif;
             font-size: 48px;
             font-style: italic;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            color: #333;
         }
         h2 {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 24px;
+            color: #333;
         }
         input {
             padding: 15px;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             font-size: 16px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 25px;
             margin-bottom: 20px;
             text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #000;
         }
         button {
             padding: 12px 30px;
@@ -67,6 +65,7 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background: #333;
@@ -75,21 +74,56 @@
             font-size: 20px;
             margin: 30px 0;
             font-weight: bold;
+            color: #333;
         }
         .footer {
             margin-top: 40px;
             font-size: 14px;
+            color: #666;
         }
         .footer a {
             color: #000;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: #666;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .logo {
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            input {
+                padding: 12px;
+                font-size: 14px;
+            }
+            button {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+            .product-status {
+                font-size: 18px;
+                margin: 20px 0;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 左上页面 - 入口页面 -->
-        <div class="page page-1">
+        <!-- 入口页面 -->
+        <div class="page page-1 active">
             <div class="logo">Forget Raven</div>
             <h2>Authentication</h2>
             <input type="text" id="code" placeholder="请输入兑换码" autocomplete="off">
@@ -100,7 +134,7 @@
             </div>
         </div>
 
-        <!-- 右上页面 - 兑换码正确 -->
+        <!-- 兑换码正确页面 -->
         <div class="page page-2">
             <div class="logo">Forget Raven</div>
             <div class="product-status">This product is genuine!</div>
@@ -111,7 +145,7 @@
             </div>
         </div>
 
-        <!-- 右下页面 - 兑换码错误 -->
+        <!-- 兑换码错误页面 -->
         <div class="page page-3">
             <div class="logo">Forget Raven</div>
             <div class="product-status">This product is pirated!</div>
@@ -141,29 +175,29 @@
 
                 const data = await res.json();
                 if (data.valid) {
-                    // 显示右上页面
-                    document.querySelector('.page-1').style.display = 'none';
-                    document.querySelector('.page-2').style.display = 'flex';
-                    document.querySelector('.page-3').style.display = 'none';
+                    // 显示正确页面
+                    document.querySelector('.page-1').classList.remove('active');
+                    document.querySelector('.page-2').classList.add('active');
+                    document.querySelector('.page-3').classList.remove('active');
                 } else {
-                    // 显示右下页面
-                    document.querySelector('.page-1').style.display = 'none';
-                    document.querySelector('.page-2').style.display = 'none';
-                    document.querySelector('.page-3').style.display = 'flex';
+                    // 显示错误页面
+                    document.querySelector('.page-1').classList.remove('active');
+                    document.querySelector('.page-2').classList.remove('active');
+                    document.querySelector('.page-3').classList.add('active');
                 }
             } catch (error) {
-                // 显示右下页面
-                document.querySelector('.page-1').style.display = 'none';
-                document.querySelector('.page-2').style.display = 'none';
-                document.querySelector('.page-3').style.display = 'flex';
+                // 显示错误页面
+                document.querySelector('.page-1').classList.remove('active');
+                document.querySelector('.page-2').classList.remove('active');
+                document.querySelector('.page-3').classList.add('active');
             }
         }
 
         function backToHome() {
             // 返回主页
-            document.querySelector('.page-1').style.display = 'flex';
-            document.querySelector('.page-2').style.display = 'none';
-            document.querySelector('.page-3').style.display = 'none';
+            document.querySelector('.page-1').classList.add('active');
+            document.querySelector('.page-2').classList.remove('active');
+            document.querySelector('.page-3').classList.remove('active');
             document.getElementById('code').value = '';
         }
 
