@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>兑换码验证</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial;}
+        body {display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 50px;}
+        input {padding: 10px; width: 300px; font-size: 16px;}
+        button {padding: 10px 20px; background: #0070f3; color: white; border: none; border-radius: 5px; cursor: pointer;}
+        #result {font-size: 18px; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <h1>输入兑换码</h1>
+    <input type="text" id="code" placeholder="请输入兑换码" autocomplete="off">
+    <button onclick="checkCode()">验证兑换码</button>
+    <p id="result"></p>
+
+    <script>
+        async function checkCode() {
+            const code = document.getElementById('code').value.trim();
+            const resultEl = document.getElementById('result');
+            
+            if (!code) {
+                resultEl.textContent = "请输入兑换码！";
+                resultEl.style.color = "red";
+                return;
+            }
+
+            // 仅发送用户输入的码到后端，不泄露任何真实码
+            const res = await fetch('/api/verify', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ code })
+            });
+
+            const data = await res.json();
+            if (data.valid) {
+                resultEl.textContent = "✅ 兑换码正确！";
+                resultEl.style.color = "green";
+            } else {
+                resultEl.textContent = "❌ 兑换码错误！";
+                resultEl.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
